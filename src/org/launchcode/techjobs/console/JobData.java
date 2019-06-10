@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -43,6 +41,7 @@ public class JobData {
             }
         }
 
+        Collections.sort(values);
         return values;
     }
 
@@ -71,13 +70,51 @@ public class JobData {
         loadData();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        value = value.toLowerCase();
 
         for (HashMap<String, String> row : allJobs) {
 
             String aValue = row.get(column);
+            aValue = aValue.toLowerCase();
 
             if (aValue.contains(value)) {
                 jobs.add(row);
+            }
+        }
+
+        return jobs;
+    }
+
+    // Find by value in all of the columns
+
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+
+        // load data, if not already loaded
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        Collection<String> collectionValues;
+        value = value.toLowerCase();
+
+        for (HashMap<String, String> row : allJobs) {
+
+            collectionValues = row.values();
+            //The values() method returns a Collection view of the values contained in this map
+            boolean flag = true;
+
+            for(String collectionValue: collectionValues ){
+
+                collectionValue = collectionValue.toLowerCase();
+
+                if(flag) {
+
+                    if(collectionValue.contains(value)) {
+
+                        jobs.add(row);
+                        flag = false; // to make sure no same job is added twice.
+
+                    }
+                }
             }
         }
 

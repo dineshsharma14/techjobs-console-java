@@ -2,6 +2,7 @@ package org.launchcode.techjobs.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -43,7 +44,8 @@ public class TechJobs {
 
                     ArrayList<String> results = JobData.findAll(columnChoice);
 
-                    System.out.println("\n*** All " + columnChoices.get(columnChoice) + " Values ***");
+                    System.out.println("\n*** All " + columnChoices.get(columnChoice)
+                            + " Values ***");
 
                     // Print list of skills, employers, etc
                     for (String item : results) {
@@ -54,14 +56,16 @@ public class TechJobs {
             } else { // choice is "search"
 
                 // How does the user want to search (e.g. by skill or employer)
-                String searchField = getUserSelection("Search by:", columnChoices);
+                String searchField = getUserSelection("Search by:",
+                        columnChoices);
 
                 // What is their search term?
                 System.out.println("\nSearch term: ");
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    //System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -94,7 +98,7 @@ public class TechJobs {
             }
 
             choiceIdx = in.nextInt();
-            in.nextLine();
+            in.nextLine();// not assigned to any variable
 
             // Validate user's input
             if (choiceIdx < 0 || choiceIdx >= choiceKeys.length) {
@@ -110,7 +114,25 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+        if(someJobs.size()>0) {
 
-        System.out.println("printJobs is not implemented yet");
+            for (int i = 0; i < someJobs.size(); i++) {
+
+                HashMap<String, String> someJob = someJobs.get(i);
+                System.out.println("\n************");
+
+                for (Map.Entry<String, String> jobDescription : someJob.entrySet()) {
+                    System.out.println(jobDescription.getKey() + ": " +
+                            jobDescription.getValue());
+                }
+
+                System.out.println("************");
+            }
+
+            System.out.println("Number of Job postings: " + someJobs.size());
+        }
+        else {
+            System.out.println("No Results!");
+        }
     }
 }
